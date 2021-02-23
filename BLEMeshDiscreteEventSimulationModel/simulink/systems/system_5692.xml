@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<System>
+  <P Name="Location">[0, 0, 1366, 768]</P>
+  <P Name="SystemRect">[0.000000, 0.000000, 0.000000, 0.000000]</P>
+  <P Name="SetExecutionDomain">off</P>
+  <P Name="ExecutionDomainType">Deduce</P>
+  <P Name="ZoomFactor">80</P>
+  <P Name="SimulinkSubDomain">Simulink</P>
+  <Block BlockType="MATLABDiscreteEventSystem" Name="AppDES" SID="13343">
+    <P Name="Ports">[1, 2]</P>
+    <P Name="Position">[1160, -574, 1460, -501]</P>
+    <P Name="ZOrder">3406</P>
+    <P Name="InputPortMessageModes">m</P>
+    <P Name="OutputPortMessageModes">m,m</P>
+    <P Name="System">AppDES</P>
+    <P Name="MaskType">AppDES</P>
+    <P Name="MaskDisplay">disp(&apos;AppDES&apos;);
+port_label(&apos;input&apos;,1,&apos;transportPDUIn&apos;);
+port_label(&apos;output&apos;,1,&apos;transportPDUOut&apos;);
+port_label(&apos;output&apos;,2,&apos;networkConfig&apos;);
+</P>
+    <P Name="NodeID">1</P>
+    <P Name="DestinationNode">1</P>
+    <P Name="ApplicationState">0</P>
+    <P Name="SourceRate">1</P>
+    <P Name="TotalPackets">1</P>
+    <P Name="SimulateUsing">Code generation</P>
+  </Block>
+  <Block BlockType="Reference" Name="BLE channel" SID="5693">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[670, -38, 880, 33]</P>
+    <P Name="ZOrder">1042</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="LibraryVersion">1.114</P>
+    <P Name="SourceBlock">BLEMeshLib/BLE Channel</P>
+    <P Name="SourceType">helperBLEChannelDES</P>
+    <InstanceData>
+      <P Name="RangePropagationLoss">On</P>
+      <P Name="FSPLModel">On</P>
+      <P Name="RxRange">25</P>
+      <P Name="NodePosition">NodePosition</P>
+      <P Name="NodeID">NodeID</P>
+      <P Name="SimulateUsing">Code generation</P>
+    </InstanceData>
+  </Block>
+  <Block BlockType="EntityMulticast" Name="Entity Multicast" SID="5696">
+    <P Name="Position">[1715, -41, 1795, -9]</P>
+    <P Name="ZOrder">922</P>
+    <P Name="InputPortMessageModes">m</P>
+    <P Name="MulticastTag">channel</P>
+  </Block>
+  <Block BlockType="EntityReplicator" Name="Entity Replicator" SID="5697">
+    <P Name="Ports">[1, 2]</P>
+    <P Name="Position">[555, -72, 645, -3]</P>
+    <P Name="ZOrder">930</P>
+    <P Name="InputPortMessageModes">m</P>
+    <P Name="OutputPortMessageModes">m,m</P>
+    <P Name="InputPortMap">u0</P>
+    <P Name="OutputPortMap">o0,o1</P>
+  </Block>
+  <Block BlockType="From" Name="From" SID="5698">
+    <P Name="Position">[1015, -545, 1140, -525]</P>
+    <P Name="ZOrder">888</P>
+    <P Name="GotoTag">PDUToApplication</P>
+  </Block>
+  <Block BlockType="From" Name="From1" SID="5699">
+    <P Name="Position">[1025, -240, 1150, -220]</P>
+    <P Name="ZOrder">897</P>
+    <P Name="GotoTag">PDUToLinkLayer</P>
+  </Block>
+  <Block BlockType="From" Name="From2" SID="5700">
+    <P Name="Position">[995, -430, 1140, -410]</P>
+    <P Name="ZOrder">889</P>
+    <P Name="GotoTag">PDUFromLinkLayer</P>
+  </Block>
+  <Block BlockType="From" Name="From3" SID="5701">
+    <P Name="Position">[995, -465, 1140, -445]</P>
+    <P Name="ZOrder">890</P>
+    <P Name="GotoTag">PDUToNetworkLayer</P>
+  </Block>
+  <Block BlockType="From" Name="From4" SID="5702">
+    <P Name="Position">[1345, -10, 1470, 10]</P>
+    <P Name="ZOrder">911</P>
+    <P Name="GotoTag">PDUToPHY</P>
+  </Block>
+  <Block BlockType="From" Name="From5" SID="5703">
+    <P Name="Position">[1345, -60, 1470, -40]</P>
+    <P Name="ZOrder">914</P>
+    <P Name="GotoTag">LLReqToPHYTx</P>
+  </Block>
+  <Block BlockType="From" Name="From6" SID="5704">
+    <P Name="Position">[415, -45, 540, -25]</P>
+    <P Name="ZOrder">931</P>
+    <P Name="GotoTag">LLReqToPHYRx</P>
+  </Block>
+  <Block BlockType="From" Name="From7" SID="5705">
+    <P Name="Position">[1025, -185, 1150, -165]</P>
+    <P Name="ZOrder">1044</P>
+    <P Name="GotoTag">PDUFromPHY</P>
+  </Block>
+  <Block BlockType="From" Name="From8" SID="13344">
+    <P Name="Position">[995, -395, 1140, -375]</P>
+    <P Name="ZOrder">3407</P>
+    <P Name="GotoTag">NetworkConfig</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto" SID="5706">
+    <P Name="Position">[1480, -565, 1620, -545]</P>
+    <P Name="ZOrder">891</P>
+    <P Name="GotoTag">PDUToNetworkLayer</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto1" SID="5707">
+    <P Name="Position">[1490, -455, 1615, -435]</P>
+    <P Name="ZOrder">892</P>
+    <P Name="GotoTag">PDUToApplication</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto2" SID="5708">
+    <P Name="Position">[1490, -400, 1615, -380]</P>
+    <P Name="ZOrder">936</P>
+    <P Name="GotoTag">PDUToLinkLayer</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto3" SID="5709">
+    <P Name="Position">[1450, -250, 1585, -230]</P>
+    <P Name="ZOrder">896</P>
+    <P Name="GotoTag">PDUFromLinkLayer</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto4" SID="5710">
+    <P Name="Position">[1450, -225, 1585, -205]</P>
+    <P Name="ZOrder">910</P>
+    <P Name="GotoTag">PDUToPHY</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto5" SID="5711">
+    <P Name="Position">[1450, -200, 1585, -180]</P>
+    <P Name="ZOrder">912</P>
+    <P Name="GotoTag">LLReqToPHYTx</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto6" SID="5712">
+    <P Name="Position">[1450, -175, 1585, -155]</P>
+    <P Name="ZOrder">913</P>
+    <P Name="GotoTag">LLReqToPHYRx</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto7" SID="5713">
+    <P Name="Position">[1180, -35, 1305, -15]</P>
+    <P Name="ZOrder">919</P>
+    <P Name="GotoTag">PDUFromPHY</P>
+  </Block>
+  <Block BlockType="Goto" Name="Goto8" SID="13345">
+    <P Name="Position">[1480, -530, 1620, -510]</P>
+    <P Name="ZOrder">3408</P>
+    <P Name="GotoTag">NetworkConfig</P>
+  </Block>
+  <Block BlockType="Reference" Name="Link layer" SID="5714">
+    <P Name="Ports">[2, 4]</P>
+    <P Name="Position">[1175, -256, 1430, -149]</P>
+    <P Name="ZOrder">900</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="LibraryVersion">1.114</P>
+    <P Name="SourceBlock">BLEMeshLib/Link layer</P>
+    <P Name="SourceType">helperBLEMeshLinkLayerDES</P>
+    <InstanceData>
+      <P Name="RandomAdvertising">On</P>
+      <P Name="AdvertisingInterval">20</P>
+      <P Name="ScanInterval">30</P>
+      <P Name="NodeID">NodeID</P>
+      <P Name="SimulateUsing">Code generation</P>
+      <Mask SelfModifiable="on" MaskOnLinkBlock="on">
+        <Type>helperBLEMeshLinkLayerDES</Type>
+        <Display RunInitForIconRedraw="off"/>
+      </Mask>
+    </InstanceData>
+  </Block>
+  <Block BlockType="Queue" Name="Multicast Receive&#xA;Queue" SID="5715">
+    <P Name="Ports">[0, 1]</P>
+    <P Name="Position">[455, -1, 535, 31]</P>
+    <P Name="ZOrder">932</P>
+    <P Name="NameLocation">top</P>
+    <P Name="ShowName">off</P>
+    <P Name="OutputPortMessageModes">m</P>
+    <P Name="OutputPortMap">o5</P>
+    <P Name="InputPortMap"/>
+    <P Name="EntityArrivalSource">Multicast</P>
+    <P Name="MulticastTag">channel</P>
+  </Block>
+  <Block BlockType="Reference" Name="Network layer" SID="5716">
+    <P Name="Ports">[3, 2]</P>
+    <P Name="Position">[1160, -474, 1460, -366]</P>
+    <P Name="ZOrder">901</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="LibraryVersion">1.114</P>
+    <P Name="SourceBlock">BLEMeshLib/Network layer</P>
+    <P Name="SourceType">helperBLEMeshNetworkLayerDES</P>
+    <InstanceData>
+      <P Name="Relay">Off</P>
+      <P Name="ElementAddresses">ElementAddress</P>
+      <P Name="NetworkTransmitCount">3</P>
+      <P Name="NetworkTransmitInterval">30</P>
+      <P Name="RelayRetransmitCount">3</P>
+      <P Name="RelayRetransmitInterval">30</P>
+      <P Name="NodeID">NodeID</P>
+      <P Name="SimulateUsing">Code generation</P>
+    </InstanceData>
+  </Block>
+  <Block BlockType="Reference" Name="PHY Rx" SID="5717">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[915, -84, 1155, 29]</P>
+    <P Name="ZOrder">1043</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="LibraryVersion">1.114</P>
+    <P Name="SourceBlock">BLEMeshLib/PHY Rx</P>
+    <P Name="SourceType">helperBLEPHYRxDES</P>
+    <InstanceData>
+      <P Name="NoiseFigure">0</P>
+      <P Name="NodeID">NodeID</P>
+      <P Name="SimulateUsing">Interpreted execution</P>
+    </InstanceData>
+  </Block>
+  <Block BlockType="Reference" Name="PHY Tx" SID="5718">
+    <P Name="Ports">[2, 1]</P>
+    <P Name="Position">[1485, -75, 1690, 25]</P>
+    <P Name="ZOrder">1041</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="LibraryVersion">1.114</P>
+    <P Name="SourceBlock">BLEMeshLib/PHY Tx</P>
+    <P Name="SourceType">helperBLEPHYTxDES</P>
+    <InstanceData>
+      <P Name="TxPower">20</P>
+      <P Name="NodePosition">NodePosition</P>
+      <P Name="NodeID">NodeID</P>
+      <P Name="SimulateUsing">Interpreted execution</P>
+    </InstanceData>
+  </Block>
+  <Line>
+    <P Name="ZOrder">1</P>
+    <P Name="Src">5714#out:4</P>
+    <P Name="Dst">5712#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">2</P>
+    <P Name="Src">5714#out:2</P>
+    <P Name="Dst">5710#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">3</P>
+    <P Name="Src">5714#out:3</P>
+    <P Name="Dst">5711#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">4</P>
+    <P Name="Src">5714#out:1</P>
+    <P Name="Dst">5709#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">5</P>
+    <P Name="Src">5701#out:1</P>
+    <P Name="Dst">5716#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">7</P>
+    <P Name="Src">5716#out:1</P>
+    <P Name="Dst">5707#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">8</P>
+    <P Name="Src">5700#out:1</P>
+    <P Name="Dst">5716#in:2</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">9</P>
+    <P Name="Src">5697#out:1</P>
+    <P Name="Dst">5717#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">10</P>
+    <P Name="Src">5717#out:1</P>
+    <P Name="Dst">5713#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">11</P>
+    <P Name="Src">5693#out:1</P>
+    <P Name="Dst">5717#in:2</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">13</P>
+    <P Name="Src">5718#out:1</P>
+    <P Name="Dst">5696#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">14</P>
+    <P Name="Src">5704#out:1</P>
+    <P Name="Dst">5697#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">15</P>
+    <P Name="Src">5715#out:1</P>
+    <P Name="Dst">5693#in:2</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">16</P>
+    <P Name="Src">5697#out:2</P>
+    <P Name="Dst">5693#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">17</P>
+    <P Name="Src">5703#out:1</P>
+    <P Name="Dst">5718#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">18</P>
+    <P Name="Src">5702#out:1</P>
+    <P Name="Dst">5718#in:2</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">19</P>
+    <P Name="Src">5716#out:2</P>
+    <P Name="Dst">5708#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">20</P>
+    <P Name="Src">5699#out:1</P>
+    <P Name="Dst">5714#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">21</P>
+    <P Name="Src">5705#out:1</P>
+    <P Name="Dst">5714#in:2</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">38</P>
+    <P Name="Src">13343#out:1</P>
+    <P Name="Dst">5706#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">39</P>
+    <P Name="Src">5698#out:1</P>
+    <P Name="Dst">13343#in:1</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">40</P>
+    <P Name="Src">13344#out:1</P>
+    <P Name="Dst">5716#in:3</P>
+  </Line>
+  <Line>
+    <P Name="ZOrder">41</P>
+    <P Name="Src">13343#out:2</P>
+    <P Name="Dst">13345#in:1</P>
+  </Line>
+  <Annotation SID="7631">
+    <P Name="Name">Network layer and above</P>
+    <P Name="Position">[965, -603, 1645, -333]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">[0.666667, 1.000000, 1.000000]</P>
+    <P Name="BackgroundColor">[0.666667, 1.000000, 1.000000]</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1797</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7630">
+    <P Name="Name">Link layer</P>
+    <P Name="Position">[1015, -270, 1605, -130]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">[1.000000, 0.666667, 0.000000]</P>
+    <P Name="BackgroundColor">[1.000000, 0.666667, 0.000000]</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1799</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7629">
+    <P Name="Name">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body align=&quot;left&quot; style=&quot; font-family:&apos;Helvetica&apos;; font-size:10px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12px; font-weight:600;&quot;&gt;Link layer:&lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Maintains the state machine for Broadcaster and Observer roles&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Transmit and receive mesh advertising packets&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;p align=&quot;left&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12px; font-weight:600;&quot;&gt;PHY &amp;amp; Channel:&lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Generate and decode physical layer waveform&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Shared channel in Rx path&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Channel impairments &lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;ul type=&quot;circle&quot; style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Free-space path loss&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Range propagation loss&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Interference&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</P>
+    <P Name="Position">[496, -281, 851, -119]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="Interpreter">rich</P>
+    <P Name="ZOrder">-3</P>
+  </Annotation>
+  <Annotation SID="7628">
+    <P Name="Name">BLE Core</P>
+    <P Name="Position">[385, -293, 1830, 72]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">white</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1798</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7627">
+    <P Name="Name">Bluetooth Mesh</P>
+    <P Name="Position">[386, -625, 1831, -315]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">white</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1796</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7621">
+    <P Name="Name">PHY Rx &amp; Channel</P>
+    <P Name="Position">[402, -104, 1317, 56]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">[0.666667, 1.000000, 0.498039]</P>
+    <P Name="BackgroundColor">[0.666667, 1.000000, 0.498039]</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1800</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7620">
+    <P Name="Name">PHY Tx</P>
+    <P Name="Position">[1328, -103, 1813, 57]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="ForegroundColor">[0.666667, 1.000000, 0.498039]</P>
+    <P Name="BackgroundColor">[0.666667, 1.000000, 0.498039]</P>
+    <P Name="DropShadow">on</P>
+    <P Name="AnnotationType">area_annotation</P>
+    <P Name="ZOrder">1801</P>
+    <P Name="FontSize">12</P>
+  </Annotation>
+  <Annotation SID="7618">
+    <P Name="Name">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body align=&quot;left&quot; style=&quot; font-family:&apos;Helvetica&apos;; font-size:10px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12px; font-weight:600;&quot;&gt;Higher layers:&lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Mesh packet generation. Generated message includes:&lt;/span&gt;&lt;/li&gt;
+&lt;ul type=&quot;circle&quot; style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Model message of type &apos;Generic onOff set unacknowledged&apos;&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Access layer header&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Lower transport layer header&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Mesh packet reception&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;p align=&quot;left&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px; font-size:11px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12px; font-weight:600;&quot;&gt;Network layer:&lt;/span&gt;&lt;/p&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Generate and decode network PDU&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Transmit network PDU using advertising bearer network interface&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Relays network PDU using advertising bearer network interface&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-size:11px;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11px;&quot;&gt;Send decoded information to lower transport layer&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;/body&gt;&lt;/html&gt;</P>
+    <P Name="Position">[491, -554, 898, -381]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="Interpreter">rich</P>
+    <P Name="ZOrder">1</P>
+  </Annotation>
+</System>

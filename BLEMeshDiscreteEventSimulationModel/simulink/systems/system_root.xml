@@ -1,0 +1,686 @@
+<?xml version="1.0" encoding="utf-8"?>
+<System>
+  <P Name="Location">[0, 0, 1366, 768]</P>
+  <P Name="SystemRect">[0.000000, 0.000000, 0.000000, 0.000000]</P>
+  <P Name="Open">on</P>
+  <P Name="SetExecutionDomain">off</P>
+  <P Name="ExecutionDomainType">Deduce</P>
+  <P Name="ReportName">simulink-default.rpt</P>
+  <P Name="SIDHighWatermark">13345</P>
+  <P Name="SimulinkSubDomain">Simulink</P>
+  <Block BlockType="SubSystem" Name="More Info" SID="7612">
+    <P Name="Ports">[]</P>
+    <P Name="Position">[375, 555, 398, 575]</P>
+    <P Name="ZOrder">4092</P>
+    <P Name="DropShadow">on</P>
+    <P Name="ShowName">off</P>
+    <P Name="OpenFcn">showExample(&apos;bluetooth/BLEMeshDiscreteEventSimulationExample&apos;)</P>
+    <P Name="RequestExecContextInheritance">off</P>
+    <Mask>
+      <Display RunInitForIconRedraw="off">disp(&apos;?&apos;)</Display>
+    </Mask>
+    <System Ref="system_7612"/>
+  </Block>
+  <Block BlockType="SubSystem" Name="NPA" SID="7177">
+    <P Name="Tag">a</P>
+    <P Name="Ports">[]</P>
+    <P Name="Position">[458, 387, 528, 438]</P>
+    <P Name="ZOrder">4073</P>
+    <P Name="ShowName">off</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="Priority">100</P>
+    <P Name="RequestExecContextInheritance">off</P>
+    <P Name="MaskHideContents">on</P>
+    <P Name="ContentPreviewEnabled">on</P>
+    <Mask SelfModifiable="on">
+      <Type>NPA</Type>
+      <Display RunInitForIconRedraw="off">disp(&apos;NPA&apos;);</Display>
+      <Description>This block allocates node positions using three different allocation strategies – 
+
+Linear position allocation: Places nodes uniformly in a vertical or a horizontal straight line. 
+
+Grid position allocation: Places nodes in a grid specified by the grid properties. These properties include - direction to assign node position in the grid, initial X-Y coordinates denoting the starting location of grid, spacing in X and Y direction between successive nodes, and the number of nodes placed in a vertical or a horizontal line.
+
+List position allocation: Places nodes specified by a list. The list is in the form of a N-by-3 matrix, where N represents the total number of nodes and each row vector of the matrix denotes the x, y, and z coordinates of a node.
+
+Each of the above node position allocation strategy follows this format to specify the name of each node – &lt;Node&gt;&lt;n&gt;. For example, in a network consisting of two nodes, the names of nodes can be (Node1, Node2) or (Node2, Node1). </Description>
+      <Initialization>% Visualization object
+coder.extrinsic(&apos;assignin&apos;, &apos;evalin&apos;);
+meshNetworkGraph = evalin(&apos;base&apos;, &apos;meshNetworkGraph&apos;);
+
+% Get initial node positions by calling node position allocation strategies
+positions = zeros(numOfNodes, 3);
+
+% Linear allocation
+if (allocationType == 1)
+    % Allocate positions in a line with constant distance between nodes.
+    count = 0;
+    for i = 1:numOfNodes
+        switch(direction)
+            % Allocate positions in a horizontal line
+            case 1
+                positions(i, 1) = initX+ delta*count;
+                positions(i, 2) = initY;
+                positions(i, 3) = 0;
+                % Allocate positions in a vertical line
+            case 2
+                positions(i, 1) = initX;
+                positions(i, 2) = initY+ delta*count;
+                positions(i, 3)= 0;
+        end
+        count = count + 1;
+    end
+    
+% Grid allocation 
+elseif (allocationType == 2)
+    for i = 1:(numOfNodes)
+        switch(direction)
+            case 1 % Arrange nodes row by row
+                positions(i, 1) = initX + GridDeltaX*(mod(i-1, GridWidth));
+                positions(i, 2) = initY + GridDeltaY*(floor((i-1)/GridWidth));
+                positions(i, 3) = 0;
+            case 2 % Arrange nodes column by column
+                positions(i, 1) = initX + GridDeltaX*(floor(i-1/GridWidth));
+                positions(i, 2) = initY + GridDeltaY*(mod(i-1, GridWidth));
+                positions(i, 3) = 0;
+        end
+    end
+        
+% List allocation    
+elseif (allocationType == 3)
+    % Allocates node positions from a list specified by the user.
+    positions = listName(1:(numOfNodes), :, :);
+end
+
+% Set the positions of nodes
+for i = 1:numOfNodes
+    % Get the block which contains matching node id as a parameter
+    blockName = find_system(bdroot,&apos;NodeID&apos;,num2str(i));
+    posID = str2num(blockName{1}(strlength([bdroot &apos;/Node&apos;])+1:end));
+    try
+        % Convert position from number to string
+        b = num2str([&apos;[&apos; [num2str(positions(posID, :)) &apos;]&apos;]]);
+        % Assign new position to a node subsystem
+        set_param(blockName{1},&apos;NodePosition&apos;, b);
+    catch
+    end
+end
+
+positions = positions(:,1:2);
+
+% Update configuration
+meshNetworkGraph.NumberOfNodes = numOfNodes;
+meshNetworkGraph.NodePositionType = &apos;UserInput&apos;;
+meshNetworkGraph.Positions = positions;
+meshNetworkGraph.VicinityRange = 25;
+meshNetworkGraph.Title = &apos;Bluetooth Mesh Network&apos;;
+
+assignin(&apos;base&apos;, &apos;meshNetworkGraph&apos;, meshNetworkGraph);</Initialization>
+      <MaskParameter Name="numOfNodes" Type="edit">
+        <Prompt>Number of nodes:</Prompt>
+        <Value>NumberOfNodes</Value>
+        <ConstraintName>numOfNodesConstraint</ConstraintName>
+      </MaskParameter>
+      <MaskParameter Name="allocationType" Type="popup">
+        <Prompt>Type of position allocation:</Prompt>
+        <Value>List Position Allocation</Value>
+        <Callback>% Get allocation type selected by user
+maskStr = get_param(gcb,&apos;allocationType&apos;);
+% Set mask parameters visibilities based on allocation type
+if strcmp(maskStr,&apos;Linear Position Allocation&apos;)
+    set_param(gcb,&apos;MaskVisibilities&apos;,{&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;});
+elseif strcmp(maskStr,&apos;List Position Allocation&apos;)
+    set_param(gcb,&apos;MaskVisibilities&apos;,{&apos;on&apos;,&apos;on&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;off&apos;,&apos;on&apos;});
+elseif strcmp(maskStr,&apos;Grid Position Allocation&apos;)
+    set_param(gcb,&apos;MaskVisibilities&apos;,{&apos;on&apos;,&apos;on&apos;,&apos;off&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;on&apos;,&apos;off&apos;});
+end
+% Clear variables
+clear maskStr;</Callback>
+        <TypeOptions>
+          <Option>Linear Position Allocation</Option>
+          <Option>Grid Position Allocation</Option>
+          <Option>List Position Allocation</Option>
+        </TypeOptions>
+      </MaskParameter>
+      <MaskParameter Name="delta" Type="edit" Visible="off">
+        <Prompt>Delta:</Prompt>
+        <Value>25</Value>
+        <ConstraintName>DeltaConstraint</ConstraintName>
+      </MaskParameter>
+      <MaskParameter Name="direction" Type="popup" Visible="off">
+        <Prompt>Direction:</Prompt>
+        <Value>X</Value>
+        <TypeOptions>
+          <Option>X</Option>
+          <Option>Y</Option>
+        </TypeOptions>
+      </MaskParameter>
+      <MaskParameter Name="initX" Type="edit" Visible="off">
+        <Prompt>Initial X:</Prompt>
+        <Value>0</Value>
+        <ConstraintName>initXConstraint</ConstraintName>
+      </MaskParameter>
+      <MaskParameter Name="initY" Type="edit" Visible="off">
+        <Prompt>Initial Y:</Prompt>
+        <Value>0</Value>
+        <ConstraintName>initYConstraint</ConstraintName>
+      </MaskParameter>
+      <MaskParameter Name="GridDeltaX" Type="edit" Visible="off">
+        <Prompt>Delta X:</Prompt>
+        <Value>5</Value>
+      </MaskParameter>
+      <MaskParameter Name="GridDeltaY" Type="edit" Visible="off">
+        <Prompt>Delta Y:</Prompt>
+        <Value>5</Value>
+      </MaskParameter>
+      <MaskParameter Name="GridWidth" Type="edit" Visible="off">
+        <Prompt>Width:</Prompt>
+        <Value>5</Value>
+      </MaskParameter>
+      <MaskParameter Name="listName" Type="edit">
+        <Prompt>Node positions:</Prompt>
+        <Value>bleMeshDESNodePositions</Value>
+        <Callback>
+</Callback>
+        <ConstraintName>ListNameConstraint</ConstraintName>
+      </MaskParameter>
+      <DialogControl Type="Group" Name="DescGroupVar">
+        <Prompt>%&lt;MaskType&gt;</Prompt>
+        <DialogControl Type="Text" Name="DescTextVar">
+          <Prompt>%&lt;MaskDescription&gt;</Prompt>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Group" Name="ParameterGroupVar">
+        <Prompt>Simulink:studio:ToolBarParametersMenu</Prompt>
+        <DialogControl Type="Edit" Name="numOfNodes">
+          <Prompt>Number of nodes:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Popup" Name="allocationType">
+          <Prompt>Type of position allocation:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="delta">
+          <Prompt>Delta:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Popup" Name="direction">
+          <Prompt>Direction:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="initX">
+          <Prompt>Initial X:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="initY">
+          <Prompt>Initial Y:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="GridDeltaX">
+          <Prompt>Delta X:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="GridDeltaY">
+          <Prompt>Delta Y:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="GridWidth">
+          <Prompt>Width:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="listName">
+          <Prompt>Node positions:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+      </DialogControl>
+      <ParameterConstraints Name="DeltaConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="numOfNodesConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="initXConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="initYConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="ListNameConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>2-D matrix</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint>(allocationType == 1) || isempty(numOfNodes) || (numel(listName) &gt;= 3*numOfNodes)</CustomConstraint>
+          <CustomErrorMessage>Invalid number of positions in list</CustomErrorMessage>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+    </Mask>
+    <System Ref="system_7177"/>
+  </Block>
+  <Block BlockType="SubSystem" Name="Node1" SID="5692">
+    <P Name="Ports">[]</P>
+    <P Name="Position">[270, 387, 325, 438]</P>
+    <P Name="ZOrder">4018</P>
+    <P Name="RequestExecContextInheritance">off</P>
+    <P Name="ContentPreviewEnabled">on</P>
+    <Mask>
+      <Display RunInitForIconRedraw="off">disp([&apos;Bluetooth&apos; newline &apos;Node&apos;]);</Display>
+      <Description>
+
+
+</Description>
+      <Initialization>global NodeInfo
+ElementAddress = hex2dec(reshape(dec2hex(NodeID, 4), 2, [])&apos;);
+NodeInfo(NodeID).NodeID = NodeID;
+NodeInfo(NodeID).ElementAddress = ElementAddress;
+</Initialization>
+      <MaskParameter Name="NodePosition" Type="edit" Internal="on" Visible="off">
+        <Prompt>Node position:</Prompt>
+        <Value>[94.35229      134.9309             0]</Value>
+        <ConstraintName>nodePositionConstraint</ConstraintName>
+      </MaskParameter>
+      <MaskParameter Name="NodeID" Type="edit" Internal="on" Visible="off">
+        <Prompt>Node id:</Prompt>
+        <Value>1</Value>
+      </MaskParameter>
+      <DialogControl Type="Group" Name="DescGroupVar">
+        <Prompt>Bluetooth device</Prompt>
+        <DialogControl Type="Text" Name="DescTextVar">
+          <Prompt>Bluetooth mesh device communicates over GAP bearer including:  Application layer, Network layer, Link layer and Physical layer</Prompt>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Group" Name="ParameterGroupVar">
+        <Prompt>Simulink:studio:ToolBarParametersMenu</Prompt>
+        <ControlOptions Visible="off"/>
+        <DialogControl Type="Edit" Name="NodePosition">
+          <Prompt>Node position:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+        <DialogControl Type="Edit" Name="NodeID">
+          <Prompt>Node id:</Prompt>
+          <ControlOptions PromptLocation="left"/>
+        </DialogControl>
+      </DialogControl>
+      <ParameterConstraints Name="nodePositionConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>row vector</String>
+            <String>column vector</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign"/>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint>numel(value) == 3</CustomConstraint>
+          <CustomErrorMessage>Node position should be a vector with three elements</CustomErrorMessage>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+    </Mask>
+    <System Ref="system_5692"/>
+  </Block>
+  <Block BlockType="DataStoreMemory" Name="NodeInfo" SID="7178">
+    <P Name="Position">[460, 537, 530, 588]</P>
+    <P Name="ZOrder">4074</P>
+    <P Name="ShowName">off</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="DataStoreName">NodeInfo</P>
+    <P Name="ReadBeforeWriteMsg">warning</P>
+    <P Name="WriteAfterWriteMsg">warning</P>
+    <P Name="WriteAfterReadMsg">warning</P>
+    <P Name="ShowAdditionalParam">off</P>
+    <P Name="OutDataTypeStr">Bus: NodeInfo</P>
+    <P Name="Dimensions">NumberOfNodes</P>
+    <Mask>
+      <Display RunInitForIconRedraw="off"/>
+      <DialogControl Type="Group" Name="DescGroupVar">
+        <Prompt>NodeInfo</Prompt>
+        <DialogControl Type="Text" Name="DescTextVar">
+          <Prompt>This block is used to store and share node-related information such as NodeID and ElementAddress. There are no configuration options for this block.</Prompt>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Group" Name="ParameterGroupVar">
+        <Prompt>Simulink:studio:ToolBarParametersMenu</Prompt>
+        <ControlOptions Visible="off"/>
+      </DialogControl>
+    </Mask>
+  </Block>
+  <Block BlockType="SubSystem" Name="Visualizer" SID="13304">
+    <P Name="Tag">a</P>
+    <P Name="Ports">[]</P>
+    <P Name="Position">[458, 462, 528, 513]</P>
+    <P Name="ZOrder">4255</P>
+    <P Name="ShowName">off</P>
+    <P Name="HideAutomaticName">off</P>
+    <P Name="Priority">100</P>
+    <P Name="RequestExecContextInheritance">off</P>
+    <P Name="MaskHideContents">on</P>
+    <P Name="ContentPreviewEnabled">on</P>
+    <Mask SelfModifiable="on">
+      <Type>Subsystem</Type>
+      <Display RunInitForIconRedraw="off">disp(&apos;Visualizer&apos;);</Display>
+      <Initialization>% Skip codegen
+coder.extrinsic(&apos;assignin&apos;, &apos;evalin&apos;, &apos;get_param&apos;);
+assignin(&apos;base&apos;, &apos;enableVisualization&apos;, enableVisualization);
+% If visualization is enabled update the configuration in visualization
+% object
+if (enableVisualization == 1)
+    meshNetworkGraph = evalin(&apos;base&apos;, &apos;meshNetworkGraph&apos;);
+    NumberOfNodes = evalin(&apos;base&apos;, &apos;NumberOfNodes&apos;);
+    % Get srcDstPairs and relayNodes from assigned configuration
+    srcDstPairs = zeros(1, 0);
+    relayNodes = zeros(1, 0);
+    srcDstPairsIdx = 1;
+    relayIdx = 1;
+    for i = 1:NumberOfNodes
+        appState = get_param([bdroot &apos;/Node&apos; num2str(i) &apos;/AppDES&apos;], &apos;ApplicationState&apos;);
+        if strcmp(appState, &apos;0&apos;) == false
+            destName = get_param([bdroot &apos;/Node&apos; num2str(i) &apos;/AppDES&apos;], &apos;DestinationNode&apos;);
+            %str = split(destName, &apos;e&apos;);
+            srcDstPairs(srcDstPairsIdx, 1) = i;
+            srcDstPairs(srcDstPairsIdx, 2) = str2double(destName);
+            %srcDstPairs(srcDstPairsIdx, 2) = str2double(str{2});
+            srcDstPairsIdx = srcDstPairsIdx + 1;
+        end
+        relay = get_param([bdroot &apos;/Node&apos; num2str(i) &apos;/Network layer&apos;], &apos;Relay&apos;);
+        if strcmp(relay, &apos;Off&apos;) == false
+            relayNodes(relayIdx) = i;
+            relayIdx = relayIdx + 1;
+        end
+    end
+    meshNetworkGraph.NumberOfNodes = NumberOfNodes;
+    meshNetworkGraph.SrcDstPairs = srcDstPairs;
+    nodeStates = zeros(1, NumberOfNodes);
+    for i=1:NumberOfNodes
+        % Relay node
+        if any(i == relayNodes)
+            nodeStates(i) = 2;
+            % End node
+        else
+            nodeStates(i) = 1;
+        end
+    end
+    meshNetworkGraph.NodeState = nodeStates;
+    meshNetworkGraph.DisplayProgressBar = false;
+    assignin(&apos;base&apos;, &apos;meshNetworkGraph&apos;, meshNetworkGraph);
+end
+</Initialization>
+      <MaskParameter Name="enableVisualization" Type="checkbox">
+        <Prompt>Enable Visualization</Prompt>
+        <Value>on</Value>
+      </MaskParameter>
+      <DialogControl Type="Group" Name="DescGroupVar">
+        <Prompt>Visualizer</Prompt>
+        <DialogControl Type="Text" Name="DescTextVar">
+          <Prompt>Visualizes Bluetooth mesh network based on the given configuration</Prompt>
+        </DialogControl>
+      </DialogControl>
+      <DialogControl Type="Group" Name="ParameterGroupVar">
+        <Prompt>Simulink:studio:ToolBarParametersMenu</Prompt>
+        <DialogControl Type="CheckBox" Name="enableVisualization">
+          <Prompt>Enable Visualization</Prompt>
+        </DialogControl>
+      </DialogControl>
+      <ParameterConstraints Name="DeltaConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="numOfNodesConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="initXConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="initYConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>scalar</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint/>
+          <CustomErrorMessage/>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+      <ParameterConstraints Name="ListNameConstraint">
+        <ParameterConstraintRule>
+          <DataType>double</DataType>
+          <StringList PropName="Dimension">
+            <String>2-D matrix</String>
+          </StringList>
+          <StringList PropName="Complexity">
+            <String>real</String>
+          </StringList>
+          <StringList PropName="Sign">
+            <String>positive</String>
+            <String>negative</String>
+            <String>zero</String>
+          </StringList>
+          <StringList PropName="Finiteness">
+            <String>finite</String>
+          </StringList>
+          <Minimum/>
+          <Maximum/>
+          <CustomConstraint>(allocationType == 1) || isempty(numOfNodes) || (numel(listName) &gt;= 3*numOfNodes)</CustomConstraint>
+          <CustomErrorMessage>Invalid number of positions in list</CustomErrorMessage>
+        </ParameterConstraintRule>
+      </ParameterConstraints>
+    </Mask>
+    <System Ref="system_13304"/>
+  </Block>
+  <Annotation SID="7613">
+    <P Name="Name">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body align=&quot;left&quot; style=&quot; font-family:&apos;Helvetica&apos;; font-size:10px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9px;&quot;&gt;Copyright 2019-2020 The MathWorks, Inc.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</P>
+    <P Name="Position">[189, 559, 360, 572]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="Interpreter">rich</P>
+    <P Name="ZOrder">-1</P>
+  </Annotation>
+  <Annotation SID="7615">
+    <P Name="Name">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body align=&quot;left&quot; style=&quot; font-family:&apos;Helvetica&apos;; font-size:10px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:16px; font-weight:600;&quot;&gt;Multi-Node Bluetooth Mesh Network Model&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</P>
+    <P Name="Position">[90, 112, 417, 133]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="Interpreter">rich</P>
+    <P Name="ZOrder">2</P>
+  </Annotation>
+  <Annotation SID="7616">
+    <P Name="Name">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body align=&quot;left&quot; style=&quot; font-family:&apos;Helvetica&apos;; font-size:10px; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Arial&apos;; font-size:11px;&quot;&gt;Scenario description:&lt;/span&gt;&lt;/p&gt;
+&lt;ol style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;This scenario consists of a Bluetooth mesh network with 21 nodes. Node is created as a masked sub-system&lt;/span&gt;&lt;/li&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Nodes are placed using list allocation strategy with the specified node positions in node position allocator (NPA)&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Node1 transmits packets to Node10 at the rate of 2 packets/second. Size of each packet is 34 bytes.&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Node21 transmits packets to Node16 at the rate of 3 packets/second. Size of each packet is 34 bytes.&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Maximum number of packets transmitted from both the source nodes is 10&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Node3, Node6, Node7, Node8, Node9, Node12, Node13, Node14, Node15 and Node17 are the relay nodes&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Simulation time is set to 3 seconds&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Each node contains:&lt;/span&gt;&lt;/li&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Bluetooth mesh packet generator and receiver (mesh packet includes model, access and transport layer encoding and decoding)&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Bluetooth mesh network layer&lt;/span&gt;&lt;/li&gt;
+&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;BLE link layer&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;BLE PHY Tx and Rx including interference modeling&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:1; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Channel model&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Nodes communicate using shared channel&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;NPA sets location of all the nodes at the start of simulation&lt;/span&gt;&lt;/li&gt;
+&lt;li style=&quot; font-family:&apos;Arial&apos;;&quot; align=&quot;left&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:12px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10px;&quot;&gt;Visualizer block visualizes the mesh network scenario&lt;/span&gt;&lt;/li&gt;&lt;/ol&gt;&lt;/body&gt;&lt;/html&gt;</P>
+    <P Name="Position">[90, 148, 736, 371]</P>
+    <P Name="InternalMargins">[0, 0, 0, 0]</P>
+    <P Name="FixedHeight">on</P>
+    <P Name="FixedWidth">on</P>
+    <P Name="Interpreter">rich</P>
+    <P Name="ZOrder">1</P>
+  </Annotation>
+</System>

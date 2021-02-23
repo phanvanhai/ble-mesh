@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sltp_graph version="1.1" packageUris="http://schema.mathworks.com/mf0/sltp_mm/R2020b_202003251737">
+  <sltp.mm.core.Context type="sltp.mm.core.Context" uuid="12b2728a-df27-4627-b5f8-c3416ef187e6">
+    <priorityDirection>HighNumberLast</priorityDirection>
+    <editorState type="sltp.mm.core.EditorState" uuid="68a13ba1-9ece-4005-a85f-d9057a5980ce">
+      <isSynchronized>true</isSynchronized>
+    </editorState>
+    <rootTask type="sltp.mm.core.Task" uuid="bc29a31a-9a35-465b-9796-d6ab5dfd8a30">
+      <context type="sltp.mm.core.Context" uuid="12b2728a-df27-4627-b5f8-c3416ef187e6"/>
+      <explicit>false</explicit>
+      <name>Default</name>
+      <priority>-2147483648</priority>
+      <subgraph type="sltp.mm.core.Graph" uuid="1f8b32e7-f82d-4dff-8eeb-359f04d29710">
+        <tasks type="sltp.mm.core.Task" uuid="c7e180fd-ed10-41cf-b466-0578d19785ce">
+          <baseTask>true</baseTask>
+          <context type="sltp.mm.core.Context" uuid="12b2728a-df27-4627-b5f8-c3416ef187e6"/>
+          <explicit>false</explicit>
+          <id>1</id>
+          <isTimed>true</isTimed>
+          <name>FiM</name>
+          <priority>40</priority>
+          <rates type="sltp.mm.core.Rate" uuid="c1c48227-a5f9-49db-9ae2-9b40a9b2e263">
+            <annotation>FiM</annotation>
+            <color>-2139062017</color>
+            <hasBlocks>true</hasBlocks>
+            <rateSpec type="sltp.mm.core.RateSpec">
+              <offset>1.0</offset>
+              <period>0.0</period>
+            </rateSpec>
+            <sti>0</sti>
+          </rates>
+          <rates type="sltp.mm.core.Rate" uuid="6f5da22e-2afd-469a-b00a-78b417710c10">
+            <annotation>V1</annotation>
+            <color>-1507120129</color>
+            <rateSpec type="sltp.mm.core.RateSpec">
+              <period>-2.0</period>
+            </rateSpec>
+            <sti>1</sti>
+          </rates>
+        </tasks>
+      </subgraph>
+    </rootTask>
+  </sltp.mm.core.Context>
+</sltp_graph>

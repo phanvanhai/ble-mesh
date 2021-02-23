@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<System>
+  <P Name="Location">[12, 45, 866, 1307]</P>
+  <P Name="SystemRect">[0.000000, 0.000000, 0.000000, 0.000000]</P>
+  <P Name="SetExecutionDomain">off</P>
+  <P Name="ExecutionDomainType">Deduce</P>
+  <P Name="SimulinkSubDomain">Simulink</P>
+</System>

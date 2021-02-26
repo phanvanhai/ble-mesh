@@ -10,10 +10,6 @@ function nodeNamesList = helperBLEMeshGetNodeNamesList(modelName)
 
 %   Copyright 2019 The MathWorks, Inc.
 
-% Extract the list of block names in the model
-data = find_system(modelName, 'SearchDepth', 1);
-% Count the number of node subsystems in the list
-count = 1;
 % Loop over each block name in the model and checks whether it is a node
 % subsystem or not
 nodeNamesList = cell(1, 0);

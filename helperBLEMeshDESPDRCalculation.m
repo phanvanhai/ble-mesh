@@ -45,37 +45,28 @@
 % Configure mesh network
 modelName = 'BLEMeshPDRvsRateModel';
 
-% % demo ttl
-% totNodes = 6;
-% srcDstPairs = [1 2 3; 2 6 1];                   % demo ttl: start: 2->TTL=5->5; after 3s: 2->TTL=2->5
-% relayNodes = [2 3 4 5];
-
-% % demo relay
-% totNodes = 6;
-% srcDstPairs = [1 4 1; 6 2 2];                   % demo relay: start: 4 relay; after 3s: 4 end
-% relayNodes = [2 3];
-
-totNodes = 20;
-% relayNodes = [3 4 6 7 8 9 12 14 15 17];
-relayNodes = [6 12 14 15 17];
+totNodes = 19;
+relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19];
+% relayNodes = [18 15 7 14 8 13 9 2];
+% relayNodes = [1 2];
 % srcDstPairs = [1 16 1];                   %TTL = 5;    Node9 = Relay
 % srcDstPairs = [1 16 1; 2 1 3];            %TTL = 15;   Node9 = Relay
 % srcDstPairs = [1 16 1; 10 9 2];           %TTL = 5;    Node9 = End
-srcDstPairs = [1 18 1;];    %TTL = 15;   Node9 = End
+srcDstPairs = [11 19 1;];    %TTL = 15;   Node9 = End
 
 % Create a new mesh network Simulink model
 helperBLEMeshCreateNetworkModel(modelName, totNodes, srcDstPairs, relayNodes);
 
 % Specify the number of simulations
-nSims = 6;
+nSims = 1;
 % Simulation stop time, in seconds
-stopTime = 30;
+stopTime = 10; 
 % Network repetition values
-networkRepetitions = [1 2 3 4 5 6];
+networkRepetitions = [3 2 3 4 5 6];
 % Interval between network repetitions
 networkRepetitionInterval = 60;
 % Source packet rate for each simulation
-srcRate = 0.5;
+srcRate = 2;
 % Max number of packets at each node
 totalPackets = 50;
 

@@ -112,7 +112,7 @@ positions = positions(:,1:2);
 meshNetworkGraph.NumberOfNodes = numOfNodes;
 meshNetworkGraph.NodePositionType = &apos;UserInput&apos;;
 meshNetworkGraph.Positions = positions;
-meshNetworkGraph.VicinityRange = 25;
+%meshNetworkGraph.VicinityRange = 25;
 meshNetworkGraph.Title = &apos;Bluetooth Mesh Network&apos;;
 
 assignin(&apos;base&apos;, &apos;meshNetworkGraph&apos;, meshNetworkGraph);</Initialization>

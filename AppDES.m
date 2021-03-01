@@ -65,7 +65,7 @@ classdef AppDES < matlab.DiscreteEventSystem
             end
             
             if obj.ApplicationState == 1
-                obj.TTL = 20;
+                obj.TTL = 127;
             elseif obj.ApplicationState == 2
                 obj.TTL = 1;
             elseif obj.ApplicationState == 3

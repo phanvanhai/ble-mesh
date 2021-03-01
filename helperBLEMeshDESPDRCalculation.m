@@ -45,14 +45,19 @@
 % Configure mesh network
 modelName = 'BLEMeshPDRvsRateModel';
 
-totNodes = 19;
-relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19];
+totNodes = 70;
+relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70];
+% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51];
+% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38];
+% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19];
 % relayNodes = [18 15 7 14 8 13 9 2];
-% relayNodes = [1 2];
-% srcDstPairs = [1 16 1];                   %TTL = 5;    Node9 = Relay
+% relayNodes = [];
+% srcDstPairs = [1 2 1];                   %TTL = 5;    Node9 = Relay
 % srcDstPairs = [1 16 1; 2 1 3];            %TTL = 15;   Node9 = Relay
 % srcDstPairs = [1 16 1; 10 9 2];           %TTL = 5;    Node9 = End
-srcDstPairs = [11 19 1;];    %TTL = 15;   Node9 = End
+% srcDstPairs = [51 39 1; 18 36 1; 1 29 1; 8 33 1];    %TTL = 15;   Node9 = End
+srcDstPairs = [1 70 1; 3 60 1; 50 7 1; 45 8 1];    %TTL = 15;   Node9 = End
+% srcDstPairs = [1 70 1; 7 64 1; 36 42 1; 4 67 1];    %TTL = 15;   Node9 = End
 
 % Create a new mesh network Simulink model
 helperBLEMeshCreateNetworkModel(modelName, totNodes, srcDstPairs, relayNodes);
@@ -60,13 +65,13 @@ helperBLEMeshCreateNetworkModel(modelName, totNodes, srcDstPairs, relayNodes);
 % Specify the number of simulations
 nSims = 1;
 % Simulation stop time, in seconds
-stopTime = 10; 
+stopTime = 10.2;
 % Network repetition values
-networkRepetitions = [3 2 3 4 5 6];
+networkRepetitions = [1 2 3 4 5 6];
 % Interval between network repetitions
 networkRepetitionInterval = 60;
 % Source packet rate for each simulation
-srcRate = 2;
+srcRate = 3;
 % Max number of packets at each node
 totalPackets = 50;
 

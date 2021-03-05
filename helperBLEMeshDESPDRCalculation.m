@@ -45,9 +45,13 @@
 % Configure mesh network
 modelName = 'BLEMeshPDRvsRateModel';
 
-totNodes = 96;
-relayNodes = 1:96;
-srcDstPairs = [89 96 1; 93 92 1; 14 23 1; 62 59 1];
+totNodes = 21;
+relayNodes = 1:21;
+srcDstPairs = [1 10 1; 21 16 1];
+% relayNodes = 1:52;
+% srcDstPairs = [52 41 1; 25 21 1; 10 8 1; 30 27 1];    %72 node
+% srcDstPairs = [68 71 1; 70 69 1;23 1 1; 28 10 1];    %72 node
+% srcDstPairs = [89 96 1; 93 92 1; 14 23 1; 62 59 1];
 % relayNodes = [1:30, 31 32 33 38 39 40 41 42 43 48 49 50 51 52 53 58 59 60 61 62 63 68 69 70 71 72 73 78 79 80 81 82 83 88 89 90 91 92 93 98 99 100];
 % srcDstPairs = [93 98 1; 91 100 1; 12 19 1; 10 38 1];
 % srcDstPairs = [1 100 1; 10 91 1; 41 60 1; 6 95 1];    %TTL = 15;   Node9 = End
@@ -56,7 +60,7 @@ srcDstPairs = [89 96 1; 93 92 1; 14 23 1; 62 59 1];
 % relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70];
 % srcDstPairs = [1 70 1; 7 64 1; 36 42 1; 67 4 1];    %TTL = 15;   Node9 = End
 % relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51];
-% srcDstPairs = [1 70 1; 3 60 1; 50 7 1; 45 8 1];    %TTL = 15;   Node9 = End
+% srcDstPairs = [68 71 1; 70 69 1;23 1 1; 28 10 1];    %TTL = 15;   Node9 = End
 % relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38];
 
 % relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19];
@@ -73,7 +77,7 @@ helperBLEMeshCreateNetworkModel(modelName, totNodes, srcDstPairs, relayNodes);
 % Specify the number of simulations
 nSims = 1;
 % Simulation stop time, in seconds
-stopTime = 5.2;
+stopTime = 10.2;
 % Network repetition values
 networkRepetitions = [1 2 3 4 5 6];
 % Interval between network repetitions

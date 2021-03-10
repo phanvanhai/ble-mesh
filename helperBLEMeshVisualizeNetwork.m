@@ -40,7 +40,7 @@ properties
     %VicinityRange Node transmission and reception range
     %   Specify vicinity range as an integer. Identifies the transmission
     %   and reception range of a node. The default value is 15.
-    VicinityRange = 25
+    VicinityRange = 9
     
     %NodeState State of each node
     %   Specify node state as a vector of size total number of nodes with 

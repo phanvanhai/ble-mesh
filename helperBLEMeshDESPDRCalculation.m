@@ -45,9 +45,9 @@
 % Configure mesh network
 modelName = 'BLEMeshPDRvsRateModel';
 
-totNodes = 21;
-relayNodes = 1:21;
-srcDstPairs = [1 10 1; 21 16 1];
+totNodes = 68;
+relayNodes = 1:68;
+srcDstPairs = [10 65 1; 68 40 1; 2 66 1; 21 30 1];
 % relayNodes = 1:52;
 % srcDstPairs = [52 41 1; 25 21 1; 10 8 1; 30 27 1];    %72 node
 % srcDstPairs = [68 71 1; 70 69 1;23 1 1; 28 10 1];    %72 node

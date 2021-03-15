@@ -16,6 +16,7 @@ classdef AppDES < matlab.DiscreteEventSystem
         % 0- EndNode, 1- Send OnOff, 2- Send Relay config, 3- Send TTL
         % config
         ApplicationState = 0
+        TTL = 127
         
         %SourceRate 
         SourceRate (1, 1) = 1       
@@ -50,7 +51,7 @@ classdef AppDES < matlab.DiscreteEventSystem
     properties (Hidden)                
         PacketInterval = 0
         PacketCount = 0
-        TTL = 127
+%         TTL = 127
         ConfigParam = 0
         ConfigValue = 0
     end
@@ -64,13 +65,13 @@ classdef AppDES < matlab.DiscreteEventSystem
                 events = [events, obj.eventGenerate(obj.InternalQueueID, 'Start timer', 0, obj.DefaultPriority)];
             end
             
-            if obj.ApplicationState == 1
-                obj.TTL = 127;
-            elseif obj.ApplicationState == 2
-                obj.TTL = 1;
-            elseif obj.ApplicationState == 3
-                obj.TTL = 1;
-            end
+%             if obj.ApplicationState == 1
+%                 obj.TTL = 127;
+%             elseif obj.ApplicationState == 2
+%                 obj.TTL = 1;
+%             elseif obj.ApplicationState == 3
+%                 obj.TTL = 1;
+%             end
         end
         
         % Invoke network layer object
@@ -220,6 +221,11 @@ classdef AppDES < matlab.DiscreteEventSystem
         % Set ApplicationState
         function set.ApplicationState(obj, value)                           
             obj.ApplicationState = value;                        
+        end
+        
+        % Set TTL
+        function set.TTL(obj, value)              
+            obj.TTL = value;
         end
         
         % Set SourceRate

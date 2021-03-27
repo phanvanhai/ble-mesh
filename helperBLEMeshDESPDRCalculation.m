@@ -46,30 +46,18 @@
 modelName = 'BLEMeshPDRvsRateModel';
 
 totNodes = 52;
-relayNodes = 1:52;
-srcDstPairs = [52 40 1;3 38 1; 18 36 1; 34 16 1];
-ttls = [127 127 127 127; 10 10 10 10; 5 5 5 5];
 % relayNodes = 1:52;
-% srcDstPairs = [52 41 1; 25 21 1; 10 8 1; 30 27 1];    %72 node
-% srcDstPairs = [68 71 1; 70 69 1;23 1 1; 28 10 1];    %72 node
-% srcDstPairs = [89 96 1; 93 92 1; 14 23 1; 62 59 1];
-% relayNodes = [1:30, 31 32 33 38 39 40 41 42 43 48 49 50 51 52 53 58 59 60 61 62 63 68 69 70 71 72 73 78 79 80 81 82 83 88 89 90 91 92 93 98 99 100];
-% srcDstPairs = [93 98 1; 91 100 1; 12 19 1; 10 38 1];
-% srcDstPairs = [1 100 1; 10 91 1; 41 60 1; 6 95 1];    %TTL = 15;   Node9 = End
-% relayNodes = [16 30 44 58 52 38 24 10 18 32 46 60 54 40 26 12 20 34 48 62];
-% srcDstPairs = [1 70 1; 7 64 1; 36 42 1; 67 4 1];    %TTL = 15;   Node9 = End
-% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70];
-% srcDstPairs = [1 70 1; 7 64 1; 36 42 1; 67 4 1];    %TTL = 15;   Node9 = End
-% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51];
-% srcDstPairs = [68 71 1; 70 69 1;23 1 1; 28 10 1];    %TTL = 15;   Node9 = End
-% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38];
+% relayNodes = [41 43 45 39];
+%relayNodes = [2 6 7 11 14 41 42 43 44 45 46 47 39 48 26 18 19 23 24];
+%relayNodes = [4 8 9 13 14 35 41 42 43 44 45 46 47 37 17 21 22 26 27 50]; 
+%relayNodes = [4 8 9 13 14 35 5 10 15 41 42 43 44 45 46 47 37 20 25 30 39 17 21 22 26 27 48 50];
+relayNodes =  [2 6 7 11 12 35 8 9 13 14 5 37 42 44 46 20 30 39 1 21 22 27 48 19 23 24 28];
+srcDstPairs = [52 40 1;3 38 1; 18 36 1; 34 16 1];
+ttls = [127 127 127 127; 13 13 13 13; 12 12 12 12; 11 11 11 11; 10 10 10 10; 9 9 9 9; 8 8 8 8; 7 7 7 7; 6 6 6 6; 5 5 5 5; 4 4 4 4];
+% ttls = [127 127 127 127; 10 10 10 10; 9 9 9 9; 8 8 8 8; 7 7 7 7; 6 6 6 6; 5 5 5 5; 11 11 11 11; 12 12 12 12; 13 13 13 13; 14 14 14 14; 4 4 4 4];
 
-% relayNodes = [1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19];
-% relayNodes = [18 15 7 14 8 13 9 2];
 % relayNodes = [];
 % srcDstPairs = [1 2 1];                   %TTL = 5;    Node9 = Relay
-% srcDstPairs = [1 16 1; 2 1 3];            %TTL = 15;   Node9 = Relay
-% srcDstPairs = [1 16 1; 10 9 2];           %TTL = 5;    Node9 = End
 
 
 % Create a new mesh network Simulink model
@@ -80,7 +68,7 @@ nSims = size(ttls, 1);
 % Simulation stop time, in seconds
 stopTime = 10.3;
 % Network repetition values
-networkRepetitions = [1 1 1 1 1 1 1 1];
+networkRepetitions = [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1];
 % Interval between network repetitions
 networkRepetitionInterval = 60;
 % Source packet rate for each simulation
@@ -118,6 +106,7 @@ for idxOne = 1:size(srcDstPairs, 1)
     end
 end
 
+fprintf('Simulation start\n');
 % Simulate the BLE mesh network model for six different network layer
 % configurations
 for idxTwo = 1:nSims
@@ -150,4 +139,6 @@ for idxTwo = 1:nSims
 end
 
 % Close Simulink model
+writetable(array2table(bleMeshPDRValues),'PDR.txt');
 close_system('BLEMeshPDRvsRateModel', false);
+fprintf('Simulation done\n');

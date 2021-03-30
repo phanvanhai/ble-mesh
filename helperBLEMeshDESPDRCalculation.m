@@ -46,15 +46,16 @@
 modelName = 'BLEMeshPDRvsRateModel';
 
 totNodes = 52;
-% relayNodes = 1:52;
-% relayNodes = [41 43 45 39];
-%relayNodes = [2 6 7 11 14 41 42 43 44 45 46 47 39 48 26 18 19 23 24];
-%relayNodes = [4 8 9 13 14 35 41 42 43 44 45 46 47 37 17 21 22 26 27 50]; 
-%relayNodes = [4 8 9 13 14 35 5 10 15 41 42 43 44 45 46 47 37 20 25 30 39 17 21 22 26 27 48 50];
-relayNodes =  [2 6 7 11 12 35 8 9 13 14 5 37 42 44 46 20 30 39 1 21 22 27 48 19 23 24 28];
+relayNodes = 1:52;
+relayNodes = [41 43 45 39];
+% relayNodes = [2 6 7 11 14 41 42 43 44 45 46 47 39 48 26 18 19 23 24];
+% relayNodes = [4 8 9 13 14 35 41 42 43 44 45 46 47 37 17 21 22 26 27 50]; 
+% relayNodes =  [2 6 7 11 12 35 8 9 13 14 5 37 42 44 46 20 30 39 1 21 22 27 48 19 23 24 28];
+% relayNodes = [4 8 9 13 14 35 5 10 15 41 42 43 44 45 46 47 37 20 25 30 39 17 21 22 26 27 48 50];
 srcDstPairs = [52 40 1;3 38 1; 18 36 1; 34 16 1];
-ttls = [127 127 127 127; 13 13 13 13; 12 12 12 12; 11 11 11 11; 10 10 10 10; 9 9 9 9; 8 8 8 8; 7 7 7 7; 6 6 6 6; 5 5 5 5; 4 4 4 4];
+% ttls = [127 127 127 127; 13 13 13 13; 12 12 12 12; 11 11 11 11; 10 10 10 10; 9 9 9 9; 8 8 8 8; 7 7 7 7; 6 6 6 6; 5 5 5 5; 4 4 4 4];
 % ttls = [127 127 127 127; 10 10 10 10; 9 9 9 9; 8 8 8 8; 7 7 7 7; 6 6 6 6; 5 5 5 5; 11 11 11 11; 12 12 12 12; 13 13 13 13; 14 14 14 14; 4 4 4 4];
+ttls = 14:126;
 
 % relayNodes = [];
 % srcDstPairs = [1 2 1];                   %TTL = 5;    Node9 = Relay
@@ -64,7 +65,8 @@ ttls = [127 127 127 127; 13 13 13 13; 12 12 12 12; 11 11 11 11; 10 10 10 10; 9 9
 helperBLEMeshCreateNetworkModel(modelName, totNodes, srcDstPairs, relayNodes);
 
 % Specify the number of simulations
-nSims = size(ttls, 1);
+% nSims = size(ttls, 1);
+nSims = numel(ttls);
 % Simulation stop time, in seconds
 stopTime = 10.3;
 % Network repetition values
@@ -112,19 +114,21 @@ fprintf('Simulation start\n');
 for idxTwo = 1:nSims
     % Edit paper:
     for idxThree = 1:size(srcDstPairs, 1)
+%         set_param(['BLEMeshPDRvsRateModel/Node' num2str(srcDstPairs(idxThree, 1)) '/AppDES'], ...
+%             'TTL', num2str(ttls(idxTwo, idxThree)));
         set_param(['BLEMeshPDRvsRateModel/Node' num2str(srcDstPairs(idxThree, 1)) '/AppDES'], ...
-            'TTL', num2str(ttls(idxTwo, idxThree)));
+            'TTL', num2str(ttls(idxTwo)));
     end
     % Update network layer repetitions and intervals at each node
     for idxThree = 1:totNodes
         % Update network repetitions and interval
         set_param(['BLEMeshPDRvsRateModel/Node' num2str(idxThree) '/Network layer'], ...
-            'NetworkTransmitCount', num2str(networkRepetitions(idxTwo)));
+            'NetworkTransmitCount', num2str(1));
         set_param(['BLEMeshPDRvsRateModel/Node' num2str(idxThree) '/Network layer'], ...
             'NetworkTransmitInterval', num2str(networkRepetitionInterval));
         % Update relay repetitions and interval
         set_param(['BLEMeshPDRvsRateModel/Node' num2str(idxThree) '/Network layer'], ...
-            'RelayRetransmitCount', num2str(networkRepetitions(idxTwo)));
+            'RelayRetransmitCount', num2str(1));
         set_param(['BLEMeshPDRvsRateModel/Node' num2str(idxThree) '/Network layer'], ...
             'RelayRetransmitInterval', num2str(networkRepetitionInterval));
     end
@@ -133,6 +137,7 @@ for idxTwo = 1:nSims
     if strcmp(status, 'stopped')
         % Get PDR for each simulation run
         bleMeshPDRValues(idxTwo) = PDR;
+        fprintf('Scene %f: %f\n', idxTwo, PDR);
         bleMeshTotalPHYTxMsgs(idxTwo) = sum(statisticsAtEachNode.PHYTransmittedSignals);
         bleMeshTotalReceivedMsgs(idxTwo) = sum(statisticsAtEachNode.ReceivedApplicationMsgs);
     end

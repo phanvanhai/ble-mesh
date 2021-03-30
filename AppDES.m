@@ -91,17 +91,17 @@ classdef AppDES < matlab.DiscreteEventSystem
             % Initialize events array
             events = obj.initEventArray();
             
-            coder.extrinsic('fprintf');            
+%             coder.extrinsic('fprintf');            
             obj.PacketCount = obj.PacketCount + 1;
             if obj.PacketCount <= obj.TotalPackets   
                 if obj.ApplicationState == 1
-                    fprintf('App layer:     Node:%f generate OnOff PDU\n', obj.NodeID);
+%                     fprintf('App layer:     Node:%f generate OnOff PDU\n', obj.NodeID);
                     events = [events, obj.eventGenerate(obj.LowerTransportPDUOutQueueID, 'Generate OnOff PDU', 0, obj.DefaultPriority)];                    
                 elseif obj.ApplicationState == 2 %&& obj.PacketCount == 2
-                    fprintf('App layer:     Node:%f generate Relay Config PDU\n', obj.NodeID);
+%                     fprintf('App layer:     Node:%f generate Relay Config PDU\n', obj.NodeID);
                     events = [events, obj.eventGenerate(obj.LowerTransportPDUOutQueueID, 'Generate Relay PDU', 0, obj.DefaultPriority)];                    
                 elseif obj.ApplicationState == 3 %&& obj.PacketCount == 2
-                    fprintf('App layer:     Node:%f generate TTL Config PDU\n', obj.NodeID);
+%                     fprintf('App layer:     Node:%f generate TTL Config PDU\n', obj.NodeID);
                     events = [events, obj.eventGenerate(obj.LowerTransportPDUOutQueueID, 'Generate TTL PDU', 0, obj.DefaultPriority)];                    
                 end
                 events = [events, obj.eventTimer('generate pdu', obj.PacketInterval/obj.USecPerSec)];
@@ -113,7 +113,7 @@ classdef AppDES < matlab.DiscreteEventSystem
             % Initialize events array
             events = obj.initEventArray();
             
-            coder.extrinsic('fprintf');     
+%             coder.extrinsic('fprintf');     
             coder.extrinsic('helperBLEMeshAppGenericPDU');
             coder.extrinsic('helperBLEMeshAccessPDU');
             coder.extrinsic('helperBLEMeshTransportDataMessage');
@@ -142,14 +142,14 @@ classdef AppDES < matlab.DiscreteEventSystem
             % TTL
             entity.data.TTL = obj.TTL;
             
-            fprintf('App layer:     Node:%f send the message to Node:%f with TTL=%f\n',obj.NodeID, dstAddress(1)*256 + dstAddress(2),...
-                                                                        entity.data.TTL);
+%             fprintf('App layer:     Node:%f send the message to Node:%f with TTL=%f\n',obj.NodeID, dstAddress(1)*256 + dstAddress(2),...
+%                                                                         entity.data.TTL);
             events = [events, obj.eventForward('output', obj.LowerTransportPDUOutQueueID, 0)]; 
         end
         
         % Lower transport PDU In entry action
         function [entity, events] = transportPDUInEntry(obj, ~, entity, ~)
-            coder.extrinsic('fprintf');            
+%             coder.extrinsic('fprintf');            
             % Initialize events array
             events = obj.initEventArray();
             % Get data from entity
@@ -159,8 +159,8 @@ classdef AppDES < matlab.DiscreteEventSystem
             ctl = entity.data.CTL;
             length = entity.data.Length;            
             lowerTransportPDU = entity.data.PDU(1:entity.data.Length);
-            fprintf('App layer:     Node:%f has received the message from Node:%f with TTL=%f\n',obj.NodeID, ...
-                                                entity.data.SourceAddress(1)*256 + entity.data.SourceAddress(2), ttl);
+%             fprintf('App layer:     Node:%f has received the message from Node:%f with TTL=%f\n',obj.NodeID, ...
+%                                                 entity.data.SourceAddress(1)*256 + entity.data.SourceAddress(2), ttl);
             events = obj.lowerTransportPDURecieverHandle(src, dst, ttl, ctl, length, lowerTransportPDU, events);                        
             % Destroy entity
             events = [events, obj.eventDestroy()];
@@ -176,7 +176,7 @@ classdef AppDES < matlab.DiscreteEventSystem
 
         % Specify actions when receiver low transport PDU:
         function events = lowerTransportPDURecieverHandle(obj, src, dst, ttl, ctl, length, lowerTransportPDU, events)
-            coder.extrinsic('fprintf');     
+%             coder.extrinsic('fprintf');     
             coder.extrinsic('helperBLEMeshAppGenericPDUDecode');
             coder.extrinsic('helperBLEMeshAccessPDUDecode');
             coder.extrinsic('helperBLEMeshTransportDataMessageDecode');
@@ -188,13 +188,13 @@ classdef AppDES < matlab.DiscreteEventSystem
                     obj.ConfigParam = double(data1);
                     obj.ConfigValue = double(data2);                    
                     if obj.ConfigParam == 1
-                        fprintf('App layer:     Node:%f sets Relay feature = %f\n', obj.NodeID, obj.ConfigValue);
+%                         fprintf('App layer:     Node:%f sets Relay feature = %f\n', obj.NodeID, obj.ConfigValue);
                         events = [events, obj.eventGenerate(obj.NetworkLayerConfigQueueID, 'Generate Config', 0, obj.DefaultPriority)];
                     end
                     
                     if obj.ConfigParam == 2
                         obj.TTL = obj.ConfigValue;
-                        fprintf('App layer:     Node:%f sets TTL config = %f\n', obj.NodeID, obj.TTL);
+%                         fprintf('App layer:     Node:%f sets TTL config = %f\n', obj.NodeID, obj.TTL);
                     end                    
             end
         end

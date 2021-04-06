@@ -47,7 +47,7 @@ modelName = 'BLEMeshPDRvsRateModel';
 
 totNodes = 52;
 relayNodes = 1:52;
-relayNodes = [41 43 45 39];
+% relayNodes = [41 43 45 39];
 % relayNodes = [2 6 7 11 14 41 42 43 44 45 46 47 39 48 26 18 19 23 24];
 % relayNodes = [4 8 9 13 14 35 41 42 43 44 45 46 47 37 17 21 22 26 27 50]; 
 % relayNodes =  [2 6 7 11 12 35 8 9 13 14 5 37 42 44 46 20 30 39 1 21 22 27 48 19 23 24 28];
